@@ -56,7 +56,45 @@ header .container{
     justify-content: space-between;
 }
 
+section.hero{
+    position: relative;
+}
+
 section.hero img{
     width: 100%;
     height: auto;
+}
+
+section.hero .hero-content{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+section.hero .container{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;  
+}
+
+section.hero h1, section.hero p{
+    color: white;
+    margin-top: 0;
+    margin-bottom: 20px;
+    max-width: 495px;
+}
+
+section.hero h1{
+    font-weight: 400;
+    font-size: 50px;
+    line-height: 56px;
+}
+
+section.hero p{
+    ont-weight: 300;
+    font-size: 20px;
+    line-height: 28px;
 }
