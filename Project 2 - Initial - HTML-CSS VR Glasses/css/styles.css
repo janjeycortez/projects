@@ -98,3 +98,15 @@ section.hero p{
     font-size: 20px;
     line-height: 28px;
 }
+
+section.hero button{
+    width: 200px;
+    height: 50px;
+    background-color: #33c6dd;
+    border-radius: 25px;
+    color: white;
+    border: 1px solid #33c6dd;
+    cursor: pointer;
+    font-size: 16px;
+    text-transform: uppercase;
+}
