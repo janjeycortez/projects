@@ -55,3 +55,8 @@ header .container{
     align-items: center;
     justify-content: space-between;
 }
+
+section.hero img{
+    width: 100%;
+    height: auto;
+}
