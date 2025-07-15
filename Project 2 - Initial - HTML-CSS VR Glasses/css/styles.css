@@ -1,0 +1,57 @@
+body{
+    margin:0;
+    font-family: 'Heebo', sans-serif;
+}
+
+.container{
+    width: 1440px;
+    max-width: 90%;
+    margin: auto;
+}
+
+header{
+    height: 70px;
+    box-shadow: 0 1px 6px 0 rgba(0,0,0,.1);
+}
+
+header section.logo{
+    font-size: 27px;
+}
+
+header section.logo span.blue-dot{
+    background-color: #33C6DD;
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    vertical-align: middle;
+    border-radius: 10px;
+}
+
+header nav ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+header nav ul li{
+   display: inline-block;
+   margin-right: 26px;
+   
+}
+
+header nav ul li:last-of-type{
+    margin-right: 0;
+}
+
+header nav ul li a{
+    color: #3e3e3e;
+    text-decoration: none;
+    font-size: 15px;
+}
+
+header .container{
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
