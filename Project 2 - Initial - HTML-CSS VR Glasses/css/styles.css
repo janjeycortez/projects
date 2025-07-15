@@ -9,6 +9,8 @@ body{
     margin: auto;
 }
 
+/*-------------------Header Section-------------------*/
+
 header{
     height: 70px;
     box-shadow: 0 1px 6px 0 rgba(0,0,0,.1);
@@ -55,6 +57,8 @@ header .container{
     align-items: center;
     justify-content: space-between;
 }
+
+/*-------------------Hero Section-------------------*/
 
 section.hero{
     position: relative;
@@ -109,4 +113,28 @@ section.hero button{
     cursor: pointer;
     font-size: 16px;
     text-transform: uppercase;
+}
+
+/*-------------------Best Seller Section-------------------*/
+
+section.best-seller{
+    padding-top: 90px;
+    padding-bottom: 80px;
+}
+
+section.best-seller h2{
+    margin-top: 0;
+    margin-bottom: 30px;
+    font-size: 34px;
+    font-weight: 400;
+    line-height: 42px;
+    text-align: center;
+}
+
+section.best-seller hr{
+    margin:auto;
+    width: 60px;
+    border: none;
+    height: 6px;
+    background-color: #33C6DD;
 }
