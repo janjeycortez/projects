@@ -156,6 +156,7 @@ section.best-sellers .product-slider .product {
     flex-direction: column;
     justify-content: space-between;
     position: relative;
+    cursor: pointer;
 }
 
 section.best-sellers .product-slider .product.new::before {
