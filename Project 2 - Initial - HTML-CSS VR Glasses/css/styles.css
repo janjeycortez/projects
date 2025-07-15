@@ -1,9 +1,9 @@
-body{
-    margin:0;
+body {
+    margin: 0;
     font-family: 'Heebo', sans-serif;
 }
 
-.container{
+.container {
     width: 1440px;
     max-width: 90%;
     margin: auto;
@@ -11,16 +11,16 @@ body{
 
 /*-------------------Header Section-------------------*/
 
-header{
+header {
     height: 70px;
-    box-shadow: 0 1px 6px 0 rgba(0,0,0,.1);
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, .1);
 }
 
-header section.logo{
+header section.logo {
     font-size: 27px;
 }
 
-header section.logo span.blue-dot{
+header section.logo span.blue-dot {
     background-color: #33C6DD;
     width: 10px;
     height: 10px;
@@ -29,29 +29,29 @@ header section.logo span.blue-dot{
     border-radius: 10px;
 }
 
-header nav ul{
+header nav ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
 }
 
-header nav ul li{
-   display: inline-block;
-   margin-right: 26px;
-   
+header nav ul li {
+    display: inline-block;
+    margin-right: 26px;
+
 }
 
-header nav ul li:last-of-type{
+header nav ul li:last-of-type {
     margin-right: 0;
 }
 
-header nav ul li a{
+header nav ul li a {
     color: #3e3e3e;
     text-decoration: none;
     font-size: 15px;
 }
 
-header .container{
+header .container {
     height: 100%;
     display: flex;
     align-items: center;
@@ -60,50 +60,51 @@ header .container{
 
 /*-------------------Hero Section-------------------*/
 
-section.hero{
+section.hero {
     position: relative;
 }
 
-section.hero img{
+section.hero img {
     width: 100%;
     height: auto;
 }
 
-section.hero .hero-content{
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+section.hero .hero-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
-section.hero .container{
-  display:flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;  
+section.hero .container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
 }
 
-section.hero h1, section.hero p{
+section.hero h1,
+section.hero p {
     color: white;
     margin-top: 0;
     margin-bottom: 20px;
     max-width: 495px;
 }
 
-section.hero h1{
+section.hero h1 {
     font-weight: 400;
     font-size: 50px;
     line-height: 56px;
 }
 
-section.hero p{
+section.hero p {
     ont-weight: 300;
     font-size: 20px;
     line-height: 28px;
 }
 
-section.hero button{
+section.hero button {
     width: 200px;
     height: 50px;
     background-color: #33c6dd;
@@ -117,12 +118,12 @@ section.hero button{
 
 /*-------------------Best Seller Section-------------------*/
 
-section.best-sellers{
+section.best-sellers {
     padding-top: 90px;
     padding-bottom: 80px;
 }
 
-section.best-sellers h2{
+section.best-sellers h2 {
     margin-top: 0;
     margin-bottom: 30px;
     font-size: 34px;
@@ -131,8 +132,8 @@ section.best-sellers h2{
     text-align: center;
 }
 
-section.best-sellers hr{
-    margin:auto;
+section.best-sellers hr {
+    margin: auto;
     width: 60px;
     border: none;
     height: 6px;
@@ -140,12 +141,12 @@ section.best-sellers hr{
     margin-bottom: 80px;
 }
 
-section.best-sellers .product-slider .container{
+section.best-sellers .product-slider .container {
     display: flex;
     justify-content: space-around;
 }
 
-section.best-sellers .product-slider .product{
+section.best-sellers .product-slider .product {
     border: 1px solid #DDDDDD;
     border-radius: 8px;
     text-align: center;
@@ -158,7 +159,7 @@ section.best-sellers .product-slider .product{
     position: relative;
 }
 
-section.best-sellers .product-slider .product.new::before{
+section.best-sellers .product-slider .product.new::before {
     content: "New";
     position: absolute;
     top: 12px;
@@ -176,11 +177,11 @@ section.best-sellers .product-slider .product-info {
     margin-top: 50px;
 }
 
-section.best-sellers .product-slider .product img{
+section.best-sellers .product-slider .product img {
     max-width: 100%;
 }
 
-section.best-sellers .product-slider .product h5{
+section.best-sellers .product-slider .product h5 {
     font-weight: 400;
     font-size: 14px;
     line-height: 30px;
@@ -189,7 +190,7 @@ section.best-sellers .product-slider .product h5{
     margin-bottom: 10px;
 }
 
-section.best-sellers .product-slider .product h4{
+section.best-sellers .product-slider .product h4 {
     font-weight: 400;
     font-size: 20px;
     line-height: 30px;
@@ -197,15 +198,36 @@ section.best-sellers .product-slider .product h4{
     margin-bottom: 10px;
 }
 
-section.best-sellers .product-slider .product h3{
+section.best-sellers .product-slider .product .price {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 12px;
+}
+
+section.best-sellers .product-slider .product .price h3 {
     font-weight: 700;
     font-size: 28px;
     line-height: 30px;
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 0;
 }
 
-section.best-sellers .product-slider .product button{
+section.best-sellers .product-slider .product .price.discount h3 {
+    color: #EC1C1C;
+}
+
+
+section.best-sellers .product-slider .product .price span.original-price {
+    margin: 0 10px;
+    font-size: 16px;
+    line-height: 24px;
+    color: #9b9b9b;
+    text-decoration: line-through;
+}
+
+section.best-sellers .product-slider .product button {
     width: 220px;
     max-width: 100%;
     height: 50px;
