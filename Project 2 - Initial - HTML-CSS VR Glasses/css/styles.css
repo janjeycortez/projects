@@ -334,6 +334,21 @@ footer ul li {
     margin-bottom: 10px;
 }
 
+footer ul li a{
+    color: white;
+    text-decoration: none;
+}
+
 footer ul li:last-of-type {
     margin-bottom: 0;
+}
+
+section.copyright{
+    text-align: center;
+    color: #E0E0E0;
+    background-color: #2b2b2b;
+    padding: 18px 0;
+    font-size: 400;
+    font-size: 16px;
+    line-height: 22px;
 }
