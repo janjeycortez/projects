@@ -117,12 +117,12 @@ section.hero button{
 
 /*-------------------Best Seller Section-------------------*/
 
-section.best-seller{
+section.best-sellers{
     padding-top: 90px;
     padding-bottom: 80px;
 }
 
-section.best-seller h2{
+section.best-sellers h2{
     margin-top: 0;
     margin-bottom: 30px;
     font-size: 34px;
@@ -131,10 +131,22 @@ section.best-seller h2{
     text-align: center;
 }
 
-section.best-seller hr{
+section.best-sellers hr{
     margin:auto;
     width: 60px;
     border: none;
     height: 6px;
     background-color: #33C6DD;
+}
+
+section.best-sellers .product-slider .product{
+    border: 1px solid #DDDDDD;
+    border-radius: 8px;
+    text-align: center;
+    width: 33%;
+    padding: 40px 0;
+}
+
+section.best-sellers .product-slider .product img{
+    max-width: 100%;
 }
