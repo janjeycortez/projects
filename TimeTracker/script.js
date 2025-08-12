@@ -26,39 +26,52 @@ function sendToGoogleSheets(data) {
     .catch(err => console.error(err));
 }
 
-function startTimer(user) {
+function startTimer(user, startTimestamp = null) {
     username = user;
-    startTime = new Date();
-    seconds = 0;
-
     document.getElementById("displayName").textContent = username;
+
+    // If no start time given, start fresh
+    if (!startTimestamp) {
+        startTime = new Date();
+        localStorage.setItem("startTime", startTime.getTime());
+        seconds = 0;
+    } else {
+        startTime = new Date(parseInt(startTimestamp));
+        // Resume elapsed time from stored value
+        seconds = Math.floor((Date.now() - startTime.getTime()) / 1000);
+    }
+
+    // Save username for persistence
+    localStorage.setItem("username", username);
+
+    clearInterval(timerInterval);
     timerInterval = setInterval(() => {
         seconds++;
         updateTimer();
     }, 1000);
+
+    updateTimer();
 }
 
 // Google Sign-In callback
 function handleCredentialResponse(response) {
     const data = jwt_decode(response.credential);
 
-    // Save login state
-    localStorage.setItem("username", data.name);
-
-    // Show tracker, hide login
     document.getElementById("googleSignInSection").style.display = "none";
     document.getElementById("trackerSection").style.display = "block";
 
     startTimer(data.name);
 }
 
-// Auto-login if already signed in before
+// Auto-login & resume timer
 window.onload = function () {
     const savedUser = localStorage.getItem("username");
-    if (savedUser) {
+    const savedStartTime = localStorage.getItem("startTime");
+
+    if (savedUser && savedStartTime) {
         document.getElementById("googleSignInSection").style.display = "none";
         document.getElementById("trackerSection").style.display = "block";
-        startTimer(savedUser);
+        startTimer(savedUser, savedStartTime);
     }
 };
 
@@ -81,10 +94,14 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 
     sendToGoogleSheets(data);
 
-    // Clear login state
+    // Clear stored session
     localStorage.removeItem("username");
+    localStorage.removeItem("startTime");
 
     // Reset UI
     document.getElementById("googleSignInSection").style.display = "block";
     document.getElementById("trackerSection").style.display = "none";
+
+    seconds = 0;
+    updateTimer();
 });
