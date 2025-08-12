@@ -1,13 +1,14 @@
 function handleCredentialResponse(response) {
-    // Decode JWT to get user info
-    const data = parseJwt(response.credential);
-    
-    // Save user name in localStorage
-    localStorage.setItem("username", data.name);
-    
-    // Redirect to tracker page
-    window.location.href = "tracker.html";
+  const data = jwt_decode(response.credential);
+  const name = data.name;
+
+  // Save name temporarily so tracker.html can use it
+  localStorage.setItem("username", name);
+  localStorage.removeItem("startTime"); // new session starts fresh
+
+  window.location.href = "tracker.html";
 }
+
 
 function parseJwt(token) {
     let base64Url = token.split('.')[1];

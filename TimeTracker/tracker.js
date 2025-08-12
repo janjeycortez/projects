@@ -19,54 +19,54 @@ function sendToGoogleSheets(data) {
   fetch("https://script.google.com/macros/s/AKfycbxEDTpaP66-iczAa9GhVRMX-8mrDfc9znAyHaUB26zuPXGWJY-orpN3V7ata2GqH9KA/exec", {
     method: "POST",
     body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" }
-  })
-  .then(res => res.text())
-  .then(res => console.log("Saved:", res))
-  .catch(err => console.error(err));
+    headers: { "Content-Type": "application/json" },
+    mode: "no-cors"
+  });
 }
 
-function startTracking(name, savedStartTime) {
-  username = name;
-  startTime = savedStartTime ? new Date(savedStartTime) : new Date();
-  
-  document.getElementById("displayName").textContent = username;
-  document.getElementById("loginForm").style.display = "none";
-  document.getElementById("trackerSection").style.display = "block";
+function startTimer(user) {
+  username = user;
+  startTime = new Date();
+  seconds = 0;
 
-  // Calculate seconds if resumed
-  if (savedStartTime) {
-    seconds = Math.floor((Date.now() - startTime.getTime()) / 1000);
-  } else {
-    seconds = 0;
-  }
+  // Save to localStorage
+  localStorage.setItem("username", username);
+  localStorage.setItem("startTime", startTime.toISOString());
+  localStorage.setItem("isTracking", "true");
+
+  document.getElementById("displayName").textContent = username;
+  document.getElementById("trackerSection").style.display = "block";
 
   timerInterval = setInterval(() => {
     seconds++;
     updateTimer();
   }, 1000);
-
-  // Save state to localStorage
-  localStorage.setItem("trackerState", JSON.stringify({
-    username,
-    startTime: startTime.toISOString()
-  }));
 }
 
-// Login
-document.getElementById("loginBtn").addEventListener("click", () => {
-  let nameInput = document.getElementById("nameInput").value.trim();
-  if (!nameInput) {
-    alert("Please enter your name!");
-    return;
-  }
-  startTracking(nameInput);
-});
+function restoreTimer() {
+  let savedName = localStorage.getItem("username");
+  let savedStart = localStorage.getItem("startTime");
+  let isTracking = localStorage.getItem("isTracking") === "true";
 
-// Logout
+  if (isTracking && savedName && savedStart) {
+    username = savedName;
+    startTime = new Date(savedStart);
+    let elapsed = Math.floor((new Date() - startTime) / 1000);
+    seconds = elapsed;
+
+    document.getElementById("displayName").textContent = username;
+    document.getElementById("trackerSection").style.display = "block";
+
+    timerInterval = setInterval(() => {
+      seconds++;
+      updateTimer();
+    }, 1000);
+    updateTimer();
+  }
+}
+
 document.getElementById("logoutBtn").addEventListener("click", () => {
   clearInterval(timerInterval);
-
   let endTime = new Date();
   let totalHours = seconds / 3600;
   let totalSalary = totalHours * hourlyRate;
@@ -76,24 +76,18 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
     loginTime: formatTime(startTime),
     logoutTime: formatTime(endTime),
     totalTime: document.getElementById("timer").textContent,
-    totalSeconds: seconds,
     salary: totalSalary.toFixed(2)
   };
 
   sendToGoogleSheets(data);
 
-  // Clear localStorage and reset UI
-  localStorage.removeItem("trackerState");
-  document.getElementById("loginForm").style.display = "block";
-  document.getElementById("trackerSection").style.display = "none";
-  document.getElementById("nameInput").value = "";
+  // Clear localStorage
+  localStorage.removeItem("username");
+  localStorage.removeItem("startTime");
+  localStorage.removeItem("isTracking");
+
+  window.location.href = "login.html"; // go back to login
 });
 
-// Check saved state on page load
-window.addEventListener("load", () => {
-  let savedState = localStorage.getItem("trackerState");
-  if (savedState) {
-    let { username, startTime } = JSON.parse(savedState);
-    startTracking(username, startTime);
-  }
-});
+// Run restore on page load
+window.onload = restoreTimer;
