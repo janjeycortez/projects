@@ -2,13 +2,13 @@ function handleCredentialResponse(response) {
   const data = jwt_decode(response.credential);
   const name = data.name;
 
-  // Save name temporarily so tracker.html can use it
+  // Save name and reset any previous start time
   localStorage.setItem("username", name);
-  localStorage.removeItem("startTime"); // new session starts fresh
+  localStorage.removeItem("startTime");
 
+  // Redirect to tracker page
   window.location.href = "tracker.html";
 }
-
 
 function parseJwt(token) {
     let base64Url = token.split('.')[1];
