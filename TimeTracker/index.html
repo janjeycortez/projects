@@ -4,6 +4,33 @@
   <title>Time Tracker with Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+
+<div id="g_id_onload"
+     data-client_id="871507739918-h5jgf6ai03ae090amc9g76t54ffbdms8.apps.googleusercontent.com"
+     data-callback="handleCredentialResponse">
+</div>
+
+<div class="g_id_signin" data-type="standard"></div>
+
+<script>
+function handleCredentialResponse(response) {
+    const data = jwt_decode(response.credential);
+    console.log("User Info:", data);
+
+    // Example: Save name/email
+    localStorage.setItem("username", data.name);
+    localStorage.setItem("useremail", data.email);
+
+    // Show your tracker UI
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("trackerSection").style.display = "block";
+
+    // Start the timer automatically
+    startTimer(data.name);
+}
+</script>
 <body>
   <h1>Time Tracker</h1>
 
