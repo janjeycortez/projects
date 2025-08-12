@@ -18,12 +18,12 @@ function formatTime(date) {
 function sendToGoogleSheets(data) {
   fetch("https://script.google.com/macros/s/AKfycbx4RQ-9FL1ydmu_XkuI2G1dNyhamrHhSiowRYEdlqrwCLpPW28kK0rwkhgF6VvMVNU/exec", {
     method: "POST",
-    body: JSON.stringify(data),
-    headers: { "Content-Type": "application/json" }
-  })
-  .then(res => res.text())
-  .then(res => console.log("Saved:", res))
-  .catch(err => console.error(err));
+    mode: "no-cors", // 🚀 avoids CORS error
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  });
+
+  console.log("Data sent to Google Sheets (no-cors mode) — can't read response.");
 }
 
 // Login
