@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Time Tracker</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="tracker.css">
 </head>
-<body class="center-screen">
-  <div class="card">
-    <h1>Welcome, <span id="displayName"></span></h1>
-    <div id="timer">00:00:00</div>
+<body>
+
+  <!-- LOGIN FORM -->
+  <div id="loginForm" class="center-container">
+    <input type="text" id="nameInput" placeholder="Enter name">
+    <button id="loginBtn">Login</button>
+  </div>
+
+  <!-- TRACKER SECTION -->
+  <div id="trackerSection" style="display:none;" class="center-container">
+    <p>Welcome, <span id="displayName"></span></p>
+    <p id="timer">00:00:00</p>
     <button id="logoutBtn">Logout</button>
   </div>
 
