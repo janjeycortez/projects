@@ -3,6 +3,7 @@ let timerInterval;
 let username = "";
 let seconds = 0;
 const hourlyRate = 470 / 8; // 58.75 PHP/hour
+const STORAGE_KEY = "timeTrackerSessions"; // All active sessions stored here
 
 function updateTimer() {
   let hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
@@ -25,45 +26,64 @@ function sendToGoogleSheets(data) {
   console.log("Data sent to Google Sheets (no-cors mode).");
 }
 
-function startTimerFromStoredData() {
-  const stored = JSON.parse(localStorage.getItem("timeTrackerData"));
-  if (stored && stored.username && stored.startTime) {
-    username = stored.username;
-    startTime = new Date(stored.startTime);
+function loadSession(user) {
+  let allSessions = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  if (allSessions[user]) {
+    startTime = new Date(allSessions[user].startTime);
     seconds = Math.floor((Date.now() - startTime.getTime()) / 1000);
+    username = user;
+
     document.getElementById("displayName").textContent = username;
     document.getElementById("loginForm").style.display = "none";
     document.getElementById("trackerSection").style.display = "block";
+
     timerInterval = setInterval(() => {
       seconds++;
       updateTimer();
     }, 1000);
+
+    updateTimer();
+    return true;
   }
+  return false;
+}
+
+function saveSession(user, start) {
+  let allSessions = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  allSessions[user] = { startTime: start };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(allSessions));
+}
+
+function clearSession(user) {
+  let allSessions = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  delete allSessions[user];
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(allSessions));
 }
 
 // Login
 document.getElementById("loginBtn").addEventListener("click", () => {
-  username = document.getElementById("nameInput").value.trim();
-  if (username === "") {
+  let enteredName = document.getElementById("nameInput").value.trim();
+  if (enteredName === "") {
     alert("Please enter your name!");
     return;
   }
-  
-  startTime = new Date();
-  localStorage.setItem("timeTrackerData", JSON.stringify({
-    username: username,
-    startTime: startTime
-  }));
 
-  document.getElementById("displayName").textContent = username;
-  document.getElementById("loginForm").style.display = "none";
-  document.getElementById("trackerSection").style.display = "block";
+  if (!loadSession(enteredName)) {
+    username = enteredName;
+    startTime = new Date();
+    seconds = 0;
+    saveSession(username, startTime);
 
-  seconds = 0;
-  timerInterval = setInterval(() => {
-    seconds++;
+    document.getElementById("displayName").textContent = username;
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("trackerSection").style.display = "block";
+
+    timerInterval = setInterval(() => {
+      seconds++;
+      updateTimer();
+    }, 1000);
     updateTimer();
-  }, 1000);
+  }
 });
 
 // Logout
@@ -84,12 +104,17 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
 
   sendToGoogleSheets(data);
 
-  // Clear storage and reset UI
-  localStorage.removeItem("timeTrackerData");
+  clearSession(username);
+
   document.getElementById("loginForm").style.display = "block";
   document.getElementById("trackerSection").style.display = "none";
   document.getElementById("nameInput").value = "";
 });
 
-// Load existing session if available
-startTimerFromStoredData();
+// Auto-load session if name already entered before
+window.addEventListener("load", () => {
+  let nameInput = document.getElementById("nameInput").value.trim();
+  if (nameInput && loadSession(nameInput)) {
+    console.log("Resumed session for:", nameInput);
+  }
+});
