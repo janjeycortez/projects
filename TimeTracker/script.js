@@ -1,6 +1,8 @@
-let seconds = 0;
+let startTime;
 let timerInterval;
 let username = "";
+let seconds = 0;
+const hourlyRate = 470 / 8; // 58.75 PHP/hour
 
 function updateTimer() {
   let hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
@@ -9,11 +11,14 @@ function updateTimer() {
   document.getElementById("timer").textContent = `${hrs}:${mins}:${secs}`;
 }
 
-// Send data to Google Sheets
-function sendToGoogleSheets(name, timeValue) {
-  fetch("YOUR_GOOGLE_SCRIPT_WEBAPP_URL", {
+function formatTime(date) {
+  return date.toLocaleTimeString("en-PH", { hour12: false });
+}
+
+function sendToGoogleSheets(data) {
+  fetch("https://script.google.com/macros/s/AKfycbx4RQ-9FL1ydmu_XkuI2G1dNyhamrHhSiowRYEdlqrwCLpPW28kK0rwkhgF6VvMVNU/exec", {
     method: "POST",
-    body: JSON.stringify({ name: name, time: timeValue }),
+    body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" }
   })
   .then(res => res.text())
@@ -28,12 +33,12 @@ document.getElementById("loginBtn").addEventListener("click", () => {
     alert("Please enter your name!");
     return;
   }
+  
+  startTime = new Date();
   document.getElementById("displayName").textContent = username;
   document.getElementById("loginForm").style.display = "none";
   document.getElementById("trackerSection").style.display = "block";
 
-  // Start Timer
-  clearInterval(timerInterval);
   seconds = 0;
   timerInterval = setInterval(() => {
     seconds++;
@@ -44,10 +49,21 @@ document.getElementById("loginBtn").addEventListener("click", () => {
 // Logout
 document.getElementById("logoutBtn").addEventListener("click", () => {
   clearInterval(timerInterval);
-  let finalTime = document.getElementById("timer").textContent;
 
-  // Send to Google Sheets
-  sendToGoogleSheets(username, finalTime);
+  let endTime = new Date();
+  let totalHours = seconds / 3600;
+  let totalSalary = totalHours * hourlyRate;
+
+  let data = {
+    name: username,
+    loginTime: formatTime(startTime),
+    logoutTime: formatTime(endTime),
+    totalTime: document.getElementById("timer").textContent,
+    totalSeconds: seconds,
+    salary: totalSalary.toFixed(2)
+  };
+
+  sendToGoogleSheets(data);
 
   // Reset UI
   document.getElementById("loginForm").style.display = "block";
