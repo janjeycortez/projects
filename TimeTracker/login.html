@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+</head>
+<body>
+  <div id="g_id_onload"
+       data-client_id="871507739918-h5jgf6ai03ae090amc9g76t54ffbdms8"
+       data-callback="handleCredentialResponse">
+  </div>
+  <div class="g_id_signin" data-type="standard"></div>
+
+  <script>
+    function handleCredentialResponse(response) {
+      const data = jwt_decode(response.credential);
+      localStorage.setItem("username", data.name);
+      localStorage.setItem("startTime", Date.now());
+      window.location.href = "tracker.html"; // go to time tracker page
+    }
+  </script>
+</body>
+</html>
