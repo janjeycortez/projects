@@ -8,43 +8,6 @@
   <div id="timer">00:00:00</div>
   <button id="logoutBtn">Logout</button>
 
-  <script>
-    const hourlyRate = 470 / 8;
-    let seconds = 0;
-    let timerInterval;
-
-    function updateTimer() {
-      let hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
-      let mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-      let secs = String(seconds % 60).padStart(2, '0');
-      document.getElementById("timer").textContent = `${hrs}:${mins}:${secs}`;
-    }
-
-    window.onload = function() {
-      const username = localStorage.getItem("username");
-      const startTime = localStorage.getItem("startTime");
-
-      if (!username || !startTime) {
-        window.location.href = "login.html";
-        return;
-      }
-
-      document.getElementById("displayName").textContent = username;
-      seconds = Math.floor((Date.now() - parseInt(startTime)) / 1000);
-
-      timerInterval = setInterval(() => {
-        seconds++;
-        updateTimer();
-      }, 1000);
-
-      updateTimer();
-    };
-
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem("username");
-      localStorage.removeItem("startTime");
-      window.location.href = "login.html";
-    });
-  </script>
+  <script src="tracker.js"></script>
 </body>
 </html>

@@ -6,19 +6,15 @@
   <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 </head>
 <body>
+  <h2>Please sign in with Google to continue</h2>
+
   <div id="g_id_onload"
        data-client_id="871507739918-h5jgf6ai03ae090amc9g76t54ffbdms8"
-       data-callback="handleCredentialResponse">
+       data-callback="handleCredentialResponse"
+       data-auto_prompt="false">
   </div>
   <div class="g_id_signin" data-type="standard"></div>
 
-  <script>
-    function handleCredentialResponse(response) {
-      const data = jwt_decode(response.credential);
-      localStorage.setItem("username", data.name);
-      localStorage.setItem("startTime", Date.now());
-      window.location.href = "tracker.html"; // go to time tracker page
-    }
-  </script>
+  <script src="login.js"></script>
 </body>
 </html>
