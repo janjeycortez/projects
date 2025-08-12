@@ -16,7 +16,7 @@ function formatTime(date) {
 }
 
 function sendToGoogleSheets(data) {
-  fetch("https://script.google.com/macros/s/AKfycbx4RQ-9FL1ydmu_XkuI2G1dNyhamrHhSiowRYEdlqrwCLpPW28kK0rwkhgF6VvMVNU/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbzJOmqNiaXr73YUflShgIpgc6XSOanLM1Nb8WATMgUo9TQpcqnAylItAqLqVHRjYyQz/exec", {
     method: "POST",
     mode: "no-cors", // 🚀 avoids CORS error
     headers: { "Content-Type": "application/json" },
