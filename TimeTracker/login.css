@@ -1,11 +1,11 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 100vh;
   background: #f9f9f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .login-container {
