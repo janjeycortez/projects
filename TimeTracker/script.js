@@ -60,6 +60,19 @@ function clearSession(user) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(allSessions));
 }
 
+function startTimer(user) {
+    username = user;
+    startTime = new Date();
+    seconds = 0;
+
+    document.getElementById("displayName").textContent = username;
+    timerInterval = setInterval(() => {
+        seconds++;
+        updateTimer();
+    }, 1000);
+}
+
+/*
 // Login
 document.getElementById("loginBtn").addEventListener("click", () => {
   let enteredName = document.getElementById("nameInput").value.trim();
@@ -84,7 +97,7 @@ document.getElementById("loginBtn").addEventListener("click", () => {
     }, 1000);
     updateTimer();
   }
-});
+});*/
 
 // Logout
 document.getElementById("logoutBtn").addEventListener("click", () => {
