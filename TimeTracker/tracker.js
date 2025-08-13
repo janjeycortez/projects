@@ -1,6 +1,6 @@
 // ==== CONFIG ====
 // Replace with your deployed Google Apps Script Web App URL
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAWrZUPz0_EhpOoyCqLB2ncW4R6pGGjk5e0Resnj4AsdRt_BDxj0nc6ktZxy0JGwSG/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGsb10UON1FAnxkKvUMPTupscgZdtotYRobOJhqfUPYXtWkMBRoW0t6D8J4WMATLmE/exec";
 
 let startTime;
 let timerInterval;
