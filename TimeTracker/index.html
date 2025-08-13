@@ -4,56 +4,21 @@
   <title>Time Tracker with Login</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
-
-<div id="g_id_onload"
-     data-client_id="871507739918-h5jgf6ai03ae090amc9g76t54ffbdms8.apps.googleusercontent.com"
-     data-callback="handleCredentialResponse">
-</div>
-
-<div class="g_id_signin" data-type="standard"></div>
-
-<script>
-function handleCredentialResponse(response) {
-    const data = jwt_decode(response.credential);
-    console.log("User Info:", data);
-
-    // Example: Save name/email
-    localStorage.setItem("username", data.name);
-    localStorage.setItem("useremail", data.email);
-
-    // Show your tracker UI
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("trackerSection").style.display = "block";
-
-    // Start the timer automatically
-    startTimer(data.name);
-}
-</script>
 <body>
-  <body>
-    <!-- Google Sign-In Button -->
-    <div id="googleSignInSection">
-        <div id="g_id_onload"
-            data-client_id="871507739918-h5jgf6ai03ae090amc9g76t54ffbdms8.apps.googleusercontent.com"
-            data-callback="handleCredentialResponse">
-        </div>
-        <div class="g_id_signin" data-type="standard"></div>
-    </div>
+  <h1>Time Tracker</h1>
 
-    <!-- Tracker Section (hidden until login) -->
-    <div id="trackerSection" style="display:none;">
-        <h2>Welcome, <span id="displayName"></span></h2>
-        <div id="timer">00:00:00</div>
-        <button id="logoutBtn">Logout</button>
-    </div>
+  <!-- Login Form -->
+  <div id="loginForm">
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <button id="loginBtn">Login</button>
+  </div>
 
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
-    <script src="script.js"></script>
-</body>
-
+  <!-- Tracker Section -->
+  <div id="trackerSection" style="display:none;">
+    <p>Welcome, <span id="displayName"></span></p>
+    <div id="timer">00:00:00</div>
+    <button id="logoutBtn">Logout</button>
+  </div>
 
   <script src="script.js"></script>
 </body>
