@@ -1,98 +1,86 @@
-// ===== CONFIG =====
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAWrZUPz0_EhpOoyCqLB2ncW4R6pGGjk5e0Resnj4AsdRt_BDxj0nc6ktZxy0JGwSG/exec"; // Replace with your actual URL
-const HOURLY_RATE = 475 / 8; // 59.375 pesos/hour
+// === CONFIG ===
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwAWrZUPz0_EhpOoyCqLB2ncW4R6pGGjk5e0Resnj4AsdRt_BDxj0nc6ktZxy0JGwSG/exec"; // Replace with your actual Web App URL
 
-// ===== STATE =====
+let startTime;
 let timerInterval;
-let elapsedSeconds = 0;
-let loginTime = null;
-let username = localStorage.getItem("username");
+let username;
 
-// ===== FUNCTIONS =====
-function formatTime(seconds) {
-    const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
-    const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-    const secs = String(seconds % 60).padStart(2, '0');
-    return `${hrs}:${mins}:${secs}`;
-}
+// Load stored session if available
+window.onload = function () {
+    username = localStorage.getItem("username");
+    startTime = localStorage.getItem("startTime");
 
-function updateDisplay() {
-    document.getElementById("timer").textContent = formatTime(elapsedSeconds);
-    const salary = (elapsedSeconds / 3600 * HOURLY_RATE).toFixed(2);
-    document.getElementById("salary").textContent = `₱${salary}`;
-}
+    if (username && startTime) {
+        document.getElementById("trackerSection").style.display = "block";
+        document.getElementById("displayName").textContent = username;
+        startTimer();
+    } else {
+        document.getElementById("loginForm").style.display = "block";
+    }
 
-function startTimer() {
-    updateDisplay(); // show immediately
-    timerInterval = setInterval(() => {
-        elapsedSeconds++;
-        updateDisplay();
-    }, 1000);
-}
+    document.getElementById("loginBtn").addEventListener("click", login);
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+};
 
-function stopTimer() {
-    clearInterval(timerInterval);
-}
-
-function saveSessionToSheet(logoutTime) {
-    const salary = (elapsedSeconds / 3600 * HOURLY_RATE).toFixed(2);
-    return fetch(SCRIPT_URL, {
-        method: "POST",
-        body: JSON.stringify({
-            name: username,
-            loginTime: loginTime,
-            logoutTime: logoutTime,
-            totalTime: formatTime(elapsedSeconds),
-            totalSeconds: elapsedSeconds,
-            salary: salary
-        }),
-        headers: { "Content-Type": "application/json" }
-    }).then(res => res.json());
-}
-
-// ===== PAGE LOAD =====
-window.onload = () => {
-    if (!username) {
-        window.location.href = "login.html";
+function login() {
+    const nameInput = document.getElementById("nameInput").value.trim();
+    if (nameInput === "") {
+        alert("Please enter your name");
         return;
     }
 
+    username = nameInput;
+    startTime = Date.now();
+
+    localStorage.setItem("username", username);
+    localStorage.setItem("startTime", startTime);
+
+    document.getElementById("loginForm").style.display = "none";
+    document.getElementById("trackerSection").style.display = "block";
     document.getElementById("displayName").textContent = username;
 
-    // Restore login time or set new one
-    loginTime = localStorage.getItem("loginTime");
-    if (!loginTime) {
-        loginTime = new Date().toISOString();
-        localStorage.setItem("loginTime", loginTime);
-    }
-
-    // Restore elapsed seconds
-    elapsedSeconds = parseInt(localStorage.getItem("elapsedSeconds") || "0", 10);
-
-    // Start timer
     startTimer();
+}
 
-    // Logout button
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-        stopTimer();
-        const logoutTime = new Date().toISOString();
+function startTimer() {
+    clearInterval(timerInterval);
 
-        saveSessionToSheet(logoutTime)
-            .then(() => {
-                // Clear session storage
-                localStorage.removeItem("username");
-                localStorage.removeItem("loginTime");
-                localStorage.removeItem("elapsedSeconds");
-                window.location.href = "login.html";
-            })
-            .catch(err => {
-                console.error("Error saving data:", err);
-                alert("Could not save session to sheet.");
-            });
-    });
+    timerInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const seconds = Math.floor(elapsed / 1000) % 60;
+        const minutes = Math.floor(elapsed / (1000 * 60)) % 60;
+        const hours = Math.floor(elapsed / (1000 * 60 * 60));
 
-    // Save elapsed time every second
-    setInterval(() => {
-        localStorage.setItem("elapsedSeconds", elapsedSeconds);
+        document.getElementById("timer").textContent =
+            String(hours).padStart(2, "0") + ":" +
+            String(minutes).padStart(2, "0") + ":" +
+            String(seconds).padStart(2, "0");
     }, 1000);
-};
+}
+
+function logout() {
+    clearInterval(timerInterval);
+
+    const logoutTime = Date.now();
+    const totalSeconds = Math.floor((logoutTime - startTime) / 1000);
+    const totalTimeFormatted = document.getElementById("timer").textContent;
+
+    // Send data to Google Sheets
+    fetch(WEB_APP_URL, {
+        method: "POST",
+        mode: "no-cors", // Needed for Apps Script
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: username,
+            loginTime: new Date(parseInt(startTime)).toLocaleString(),
+            logoutTime: new Date(logoutTime).toLocaleString(),
+            totalTime: totalTimeFormatted,
+            totalSeconds: totalSeconds
+        })
+    }).catch(err => console.error("Error sending data:", err));
+
+    // Clear local storage and go back to login
+    localStorage.removeItem("username");
+    localStorage.removeItem("startTime");
+    window.location.href = "login.html";
+}
