@@ -1,70 +1,93 @@
-// ===== CONFIG =====
+// Replace this with your Google Apps Script Web App URL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAWrZUPz0_EhpOoyCqLB2ncW4R6pGGjk5e0Resnj4AsdRt_BDxj0nc6ktZxy0JGwSG/exec";
 
-// ===== ELEMENTS =====
-const displayName = document.getElementById("displayName");
-const timerEl = document.getElementById("timer");
-const logoutBtn = document.getElementById("logoutBtn");
+const HOURLY_RATE = 475 / 8; // 59.375 pesos/hour
 
 let timerInterval;
-let startTime;
+let elapsedSeconds = 0;
+let loginTime = null;
+let username = localStorage.getItem("username");
 
-// ===== FUNCTIONS =====
-function formatTime(ms) {
-    if (!ms || isNaN(ms)) return "00:00:00";
-
-    let totalSeconds = Math.floor(ms / 1000);
-    let hours = String(Math.floor(totalSeconds / 3600)).padStart(2, "0");
-    let minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, "0");
-    let seconds = String(totalSeconds % 60).padStart(2, "0");
-
-    return `${hours}:${minutes}:${seconds}`;
+function formatTime(seconds) {
+    const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    return `${hrs}:${mins}:${secs}`;
 }
 
 function startTimer() {
     timerInterval = setInterval(() => {
-        let now = Date.now();
-        let elapsed = now - parseInt(startTime, 10);
-        timerEl.textContent = formatTime(elapsed);
+        elapsedSeconds++;
+        document.getElementById("timer").textContent = formatTime(elapsedSeconds);
+
+        // Calculate salary per second
+        const salary = (elapsedSeconds / 3600 * HOURLY_RATE).toFixed(2);
+        document.getElementById("salary").textContent = `₱${salary}`;
     }, 1000);
 }
 
-// ===== ON PAGE LOAD =====
+function stopTimer() {
+    clearInterval(timerInterval);
+}
+
 window.onload = () => {
-    let username = localStorage.getItem("username");
-    startTime = localStorage.getItem("startTime");
-
-    if (displayName && username) {
-        displayName.textContent = username;
+    if (!username) {
+        window.location.href = "login.html";
+        return;
     }
 
-    if (startTime) {
-        startTimer();
+    document.getElementById("displayName").textContent = username;
+
+    // Restore login time from local storage
+    loginTime = localStorage.getItem("loginTime");
+    if (!loginTime) {
+        loginTime = new Date().toISOString();
+        localStorage.setItem("loginTime", loginTime);
     }
-};
 
-// ===== LOGOUT =====
-if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
-        clearInterval(timerInterval);
+    // Restore elapsed time
+    const savedElapsed = localStorage.getItem("elapsedSeconds");
+    if (savedElapsed) {
+        elapsedSeconds = parseInt(savedElapsed, 10);
+    }
 
-        let endTime = Date.now();
-        let elapsed = startTime ? endTime - parseInt(startTime, 10) : 0;
-        let username = localStorage.getItem("username");
+    startTimer();
 
-        // Send to Google Sheets
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+        stopTimer();
+        const logoutTime = new Date().toISOString();
+        const salary = (elapsedSeconds / 3600 * HOURLY_RATE).toFixed(2);
+
+        // Save data to Google Sheet
         fetch(SCRIPT_URL, {
             method: "POST",
-            mode: "no-cors",
-            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                username: username,
-                time: formatTime(elapsed)
-            })
-        }).then(() => {
-            localStorage.removeItem("startTime");
+                name: username,
+                loginTime: loginTime,
+                logoutTime: logoutTime,
+                totalTime: formatTime(elapsedSeconds),
+                totalSeconds: elapsedSeconds,
+                salary: salary
+            }),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Data saved:", data);
+
+            // Clear local storage and go back to login page
             localStorage.removeItem("username");
-            window.location.href = "login.html"; // Redirect to login page
-        });
+            localStorage.removeItem("loginTime");
+            localStorage.removeItem("elapsedSeconds");
+            window.location.href = "login.html";
+        })
+        .catch(err => console.error("Error saving data:", err));
     });
-}
+};
+
+// Save elapsed time every second in local storage
+setInterval(() => {
+    localStorage.setItem("elapsedSeconds", elapsedSeconds);
+}, 1000);
