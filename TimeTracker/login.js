@@ -1,13 +1,12 @@
 function handleCredentialResponse(response) {
-  const data = jwt_decode(response.credential);
-  const name = data.name;
-
-  // Save name and reset any previous start time
-  localStorage.setItem("username", name);
-  localStorage.removeItem("startTime");
-
-  // Redirect to tracker page
-  window.location.href = "tracker.html";
+    // Decode JWT to get user info
+    const data = parseJwt(response.credential);
+    
+    // Save user name in localStorage
+    localStorage.setItem("username", data.name);
+    
+    // Redirect to tracker page
+    window.location.href = "tracker.html";
 }
 
 function parseJwt(token) {
