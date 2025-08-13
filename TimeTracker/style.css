@@ -18,7 +18,7 @@ body {
   color: var(--text);
 }
 
-/* Center page */
+/* Center the card */
 .auth {
   min-height: 100vh;
   display: grid;
@@ -26,7 +26,7 @@ body {
   padding: 24px;
 }
 
-/* Card container */
+/* Card styling */
 .auth-card {
   background: var(--card-bg);
   border-radius: var(--radius);
@@ -43,7 +43,7 @@ body {
   margin-bottom: 24px;
 }
 
-/* Inputs */
+/* Input fields */
 .auth-input {
   width: 100%;
   padding: 12px 14px;
@@ -97,25 +97,13 @@ body {
   margin-bottom: 8px;
 }
 
-/* Timer display (Google Clock style) */
+/* Timer styling */
 .timer-display {
   font-size: 32px;
   font-weight: 500;
   font-family: "Roboto Mono", monospace;
   letter-spacing: 1px;
   margin: 16px 0;
-}
-
-/* Fade animation for section switching */
-.fade-section {
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.fade-section.show {
-  opacity: 1;
-  transform: translateY(0);
 }
 
 /* Optional dark mode */
