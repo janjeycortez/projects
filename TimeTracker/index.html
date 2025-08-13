@@ -1,25 +1,18 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Time Tracker with Login</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <h1>Time Tracker</h1>
+<div class="auth">
+  <div class="auth-card">
+    <h1 class="auth-title">Time Tracker</h1>
 
-  <!-- Login Form -->
-  <div id="loginForm">
-    <input type="text" id="nameInput" placeholder="Enter your name">
-    <button id="loginBtn">Login</button>
+    <!-- Login Form -->
+    <div id="loginForm" class="fade-section">
+      <input type="text" id="nameInput" class="auth-input" placeholder="Enter your name">
+      <button id="loginBtn" class="auth-btn auth-btn--primary">Login</button>
+    </div>
+
+    <!-- Tracker Section -->
+    <div id="trackerSection" class="fade-section" style="display:none;">
+      <p class="welcome">Welcome, <span id="displayName"></span></p>
+      <div id="timer" class="timer-display">00:00:00</div>
+      <button id="logoutBtn" class="auth-btn auth-btn--outline">Logout</button>
+    </div>
   </div>
-
-  <!-- Tracker Section -->
-  <div id="trackerSection" style="display:none;">
-    <p>Welcome, <span id="displayName"></span></p>
-    <div id="timer">00:00:00</div>
-    <button id="logoutBtn">Logout</button>
-  </div>
-
-  <script src="script.js"></script>
-</body>
-</html>
+</div>

@@ -34,8 +34,7 @@ function loadSession(user) {
     username = user;
 
     document.getElementById("displayName").textContent = username;
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("trackerSection").style.display = "block";
+    showSection("trackerSection");
 
     timerInterval = setInterval(() => {
       seconds++;
@@ -60,6 +59,17 @@ function clearSession(user) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(allSessions));
 }
 
+// Smooth section switcher
+function showSection(id) {
+  document.querySelectorAll('.fade-section').forEach(sec => {
+    sec.style.display = "none";
+    sec.classList.remove("show");
+  });
+  const el = document.getElementById(id);
+  el.style.display = "block";
+  requestAnimationFrame(() => el.classList.add("show"));
+}
+
 // Login
 document.getElementById("loginBtn").addEventListener("click", () => {
   let enteredName = document.getElementById("nameInput").value.trim();
@@ -75,8 +85,7 @@ document.getElementById("loginBtn").addEventListener("click", () => {
     saveSession(username, startTime);
 
     document.getElementById("displayName").textContent = username;
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("trackerSection").style.display = "block";
+    showSection("trackerSection");
 
     timerInterval = setInterval(() => {
       seconds++;
@@ -103,18 +112,20 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   };
 
   sendToGoogleSheets(data);
-
   clearSession(username);
 
-  document.getElementById("loginForm").style.display = "block";
-  document.getElementById("trackerSection").style.display = "none";
+  showSection("loginForm");
   document.getElementById("nameInput").value = "";
 });
 
-// Auto-load session if name already entered before
+// Auto-load session if stored
 window.addEventListener("load", () => {
-  let nameInput = document.getElementById("nameInput").value.trim();
-  if (nameInput && loadSession(nameInput)) {
-    console.log("Resumed session for:", nameInput);
+  let allSessions = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  let storedNames = Object.keys(allSessions);
+  if (storedNames.length > 0) {
+    // Load the first stored session
+    loadSession(storedNames[0]);
+  } else {
+    showSection("loginForm");
   }
 });
