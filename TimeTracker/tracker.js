@@ -1,8 +1,7 @@
 // ==== CONFIG ====
-// Replace with your actual Google Apps Script Web App URL
+// Replace with your deployed Google Apps Script Web App URL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAWrZUPz0_EhpOoyCqLB2ncW4R6pGGjk5e0Resnj4AsdRt_BDxj0nc6ktZxy0JGwSG/exec";
 
-// Track start time
 let startTime;
 let timerInterval;
 
@@ -14,15 +13,20 @@ window.onload = () => {
   }
   document.getElementById("username").textContent = username;
 
-  // Start the timer
-  startTime = Date.now();
-  timerInterval = setInterval(updateTimer, 1000);
+  // Retrieve saved start time
+  const savedStartTime = localStorage.getItem("startTime");
+  if (savedStartTime) {
+    startTime = parseInt(savedStartTime, 10);
+  } else {
+    startTime = Date.now();
+    localStorage.setItem("startTime", startTime);
+  }
 
-  // Logout button click
+  timerInterval = setInterval(updateTimer, 1000);
   document.getElementById("logoutBtn").addEventListener("click", logoutUser);
 };
 
-// Update timer display
+// Update timer
 function updateTimer() {
   const elapsedMs = Date.now() - startTime;
   const elapsedSec = Math.floor(elapsedMs / 1000);
@@ -34,7 +38,7 @@ function updateTimer() {
   document.getElementById("timer").textContent = `${hours}:${minutes}:${seconds}`;
 }
 
-// Handle logout
+// Logout + send data
 function logoutUser() {
   clearInterval(timerInterval);
 
@@ -54,14 +58,19 @@ function logoutUser() {
     totalSeconds: elapsedSec
   };
 
-  // Send data to Google Sheets
   fetch(SCRIPT_URL, {
     method: "POST",
-    mode: "no-cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
-  }).finally(() => {
-    localStorage.removeItem("username");
-    window.location.href = "login.html";
-  });
+  })
+    .then(response => response.json())
+    .then(res => {
+      console.log("Response:", res);
+    })
+    .catch(err => console.error("Error:", err))
+    .finally(() => {
+      localStorage.removeItem("username");
+      localStorage.removeItem("startTime");
+      window.location.href = "login.html";
+    });
 }
