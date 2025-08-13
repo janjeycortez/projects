@@ -97,4 +97,35 @@ document.getElementById("loginBtn").addEventListener("click", () => {
 
 // Logout
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  clearInterval(timerInter
+  clearInterval(timerInterval);
+
+  let endTime = new Date();
+  let totalHours = seconds / 3600;
+  let totalSalary = totalHours * hourlyRate;
+
+  let data = {
+    name: username,
+    loginTime: formatTime(startTime),
+    logoutTime: formatTime(endTime),
+    totalTime: document.getElementById("timer").textContent,
+    salary: totalSalary.toFixed(2)
+  };
+
+  sendToGoogleSheets(data);
+  clearSession(username);
+
+  showSection("loginForm");
+  document.getElementById("nameInput").value = "";
+});
+
+// Auto-load session if stored
+window.addEventListener("load", () => {
+  let allSessions = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  let storedNames = Object.keys(allSessions);
+  if (storedNames.length > 0) {
+    // Load the first stored session
+    loadSession(storedNames[0]);
+  } else {
+    showSection("loginForm");
+  }
+});
