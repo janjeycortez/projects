@@ -94,8 +94,13 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   let totalHours = seconds / 3600;
   let totalSalary = totalHours * hourlyRate;
 
+  // Create date + day of week
+  let today = new Date();
+  let options = { weekday: 'long', year: 'numeric', month: '2-digit', day: '2-digit' };
+  let formattedDate = today.toLocaleDateString("en-PH", options);
+
   let data = {
-    date: new Date().toLocaleDateString("en-PH"), // Added date field
+    date: formattedDate, // e.g. "Wednesday, 08/13/2025"
     name: username,
     loginTime: formatTime(startTime),
     logoutTime: formatTime(endTime),
@@ -111,6 +116,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   document.getElementById("trackerSection").style.display = "none";
   document.getElementById("nameInput").value = "";
 });
+
 
 // Auto-load session if name already entered before
 window.addEventListener("load", () => {
