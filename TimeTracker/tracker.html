@@ -3,16 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Time Tracker</title>
-  <link rel="stylesheet" href="tracker.css">
+  <title>Tracker</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="tracker-container slide-up">
-    <h2 id="displayName"></h2>
-    <div id="timer" class="timer">00:00:00</div>
-    <button id="logoutBtn" class="btn logout">Logout</button>
+  <div class="tracker-container">
+    <h1>Welcome, <span id="username"></span></h1>
+    <div id="timer" class="glow-timer">00:00:00</div>
+    <button id="logoutBtn" class="logout-btn">Logout</button>
   </div>
-
   <script src="tracker.js"></script>
 </body>
 </html>

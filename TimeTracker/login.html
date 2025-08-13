@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Time Tracker Login</title>
-  <link rel="stylesheet" href="login.css">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
   <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
 </head>
 <body>
-  <div class="login-container fade-in">
-    <h1>Welcome</h1>
-    <p>Sign in with Google to start tracking your time</p>
+  <div class="login-container">
+    <h1>Sign In</h1>
     <div id="g_id_onload"
          data-client_id="871507739918-h5jgf6ai03ae090amc9g76t54ffbdms8.apps.googleusercontent.com"
          data-callback="handleCredentialResponse">
     </div>
     <div class="g_id_signin"
          data-type="standard"
-         data-shape="rectangular"
+         data-size="large"
          data-theme="outline"
          data-text="sign_in_with"
-         data-size="large">
+         data-shape="rectangular"
+         data-logo_alignment="left">
     </div>
   </div>
-
   <script src="login.js"></script>
 </body>
 </html>
