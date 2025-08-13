@@ -105,6 +105,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
     loginTime: formatTime(startTime),
     logoutTime: formatTime(endTime),
     totalTime: document.getElementById("timer").textContent,
+    totalSeconds: seconds,
     salary: totalSalary.toFixed(2)
   };
 
