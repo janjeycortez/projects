@@ -1,19 +1,17 @@
 // ==== CONFIG ====
-// Replace with your deployed Google Apps Script Web App URL
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGsb10UON1FAnxkKvUMPTupscgZdtotYRobOJhqfUPYXtWkMBRoW0t6D8J4WMATLmE/exec";
 
 let startTime;
 let timerInterval;
 
 window.onload = () => {
-  const username = localStorage.getItem("username");
+  let username = localStorage.getItem("username");
   if (!username) {
     window.location.href = "login.html";
     return;
   }
   document.getElementById("username").textContent = username;
 
-  // Retrieve saved start time
   const savedStartTime = localStorage.getItem("startTime");
   if (savedStartTime) {
     startTime = parseInt(savedStartTime, 10);
@@ -26,7 +24,6 @@ window.onload = () => {
   document.getElementById("logoutBtn").addEventListener("click", logoutUser);
 };
 
-// Update timer
 function updateTimer() {
   const elapsedMs = Date.now() - startTime;
   const elapsedSec = Math.floor(elapsedMs / 1000);
@@ -38,7 +35,6 @@ function updateTimer() {
   document.getElementById("timer").textContent = `${hours}:${minutes}:${seconds}`;
 }
 
-// Logout + send data
 function logoutUser() {
   clearInterval(timerInterval);
 
@@ -58,16 +54,20 @@ function logoutUser() {
     totalSeconds: elapsedSec
   };
 
+  console.log("Sending data to spreadsheet:", data);
+
   fetch(SCRIPT_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data)
   })
-    .then(response => response.json())
-    .then(res => {
-      console.log("Response:", res);
+    .then(res => res.json())
+    .then(response => {
+      console.log("Spreadsheet response:", response);
     })
-    .catch(err => console.error("Error:", err))
+    .catch(err => {
+      console.error("Error sending data:", err);
+    })
     .finally(() => {
       localStorage.removeItem("username");
       localStorage.removeItem("startTime");

@@ -3,27 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+  <title>Login Test</title>
+  <link rel="stylesheet" href="login.css">
 </head>
 <body>
   <div class="login-container">
     <h1>Sign In</h1>
-    <div id="g_id_onload"
-         data-client_id="871507739918-h5jgf6ai03ae090amc9g76t54ffbdms8.apps.googleusercontent.com"
-         data-callback="handleCredentialResponse">
-    </div>
-    <div class="g_id_signin"
-         data-type="standard"
-         data-size="large"
-         data-theme="outline"
-         data-text="sign_in_with"
-         data-shape="rectangular"
-         data-logo_alignment="left">
-    </div>
+    <input type="text" id="usernameInput" placeholder="Enter your name" />
+    <button id="loginBtn">Start Tracking</button>
   </div>
-  <script src="login.js"></script>
+
+  <script>
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      const name = document.getElementById("usernameInput").value.trim();
+      if (name) {
+        localStorage.setItem("username", name);
+        localStorage.setItem("startTime", Date.now());
+        window.location.href = "tracker.html";
+      } else {
+        alert("Please enter your name.");
+      }
+    });
+  </script>
 </body>
 </html>
