@@ -1,83 +1,67 @@
+// ==== CONFIG ====
+// Replace with your actual Google Apps Script Web App URL
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAWrZUPz0_EhpOoyCqLB2ncW4R6pGGjk5e0Resnj4AsdRt_BDxj0nc6ktZxy0JGwSG/exec";
+
+// Track start time
+let startTime;
 let timerInterval;
-let startTime = null;
-let elapsedSeconds = 0;
 
-const timerDisplay = document.getElementById("timer");
-const startBtn = document.getElementById("startBtn");
-const stopBtn = document.getElementById("stopBtn");
-const logoutBtn = document.getElementById("logoutBtn");
-
-// Load previous session if available
-if (localStorage.getItem("startTime")) {
-    startTime = new Date(parseInt(localStorage.getItem("startTime"), 10));
-    startTimer();
-}
-
-// Start Timer
-startBtn.addEventListener("click", () => {
-    if (!startTime) {
-        startTime = new Date();
-        localStorage.setItem("startTime", startTime.getTime());
-    }
-    startTimer();
-});
-
-// Stop Timer
-stopBtn.addEventListener("click", () => {
-    clearInterval(timerInterval);
-    const now = new Date();
-    elapsedSeconds = Math.floor((now - startTime) / 1000);
-
-    // Save to Google Sheets
-    sendDataToSheets(elapsedSeconds);
-
-    // Reset local storage
-    localStorage.removeItem("startTime");
-    startTime = null;
-    elapsedSeconds = 0;
-    timerDisplay.textContent = "00:00:00";
-});
-
-// Logout
-logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("startTime");
+window.onload = () => {
+  const username = localStorage.getItem("username");
+  if (!username) {
     window.location.href = "login.html";
-});
+    return;
+  }
+  document.getElementById("username").textContent = username;
 
-// Update Timer Function
-function startTimer() {
-    clearInterval(timerInterval);
-    timerInterval = setInterval(() => {
-        const now = new Date();
-        elapsedSeconds = Math.floor((now - startTime) / 1000);
-        timerDisplay.textContent = formatTime(elapsedSeconds);
-    }, 1000);
+  // Start the timer
+  startTime = Date.now();
+  timerInterval = setInterval(updateTimer, 1000);
+
+  // Logout button click
+  document.getElementById("logoutBtn").addEventListener("click", logoutUser);
+};
+
+// Update timer display
+function updateTimer() {
+  const elapsedMs = Date.now() - startTime;
+  const elapsedSec = Math.floor(elapsedMs / 1000);
+
+  const hours = String(Math.floor(elapsedSec / 3600)).padStart(2, "0");
+  const minutes = String(Math.floor((elapsedSec % 3600) / 60)).padStart(2, "0");
+  const seconds = String(elapsedSec % 60).padStart(2, "0");
+
+  document.getElementById("timer").textContent = `${hours}:${minutes}:${seconds}`;
 }
 
-// Format Seconds → HH:MM:SS
-function formatTime(seconds) {
-    const h = String(Math.floor(seconds / 3600)).padStart(2, '0');
-    const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
-    const s = String(seconds % 60).padStart(2, '0');
-    return `${h}:${m}:${s}`;
-}
+// Handle logout
+function logoutUser() {
+  clearInterval(timerInterval);
 
-// Send Data to Google Sheets
-function sendDataToSheets(totalSeconds) {
-    fetch("https://script.google.com/macros/s/AKfycbwAWrZUPz0_EhpOoyCqLB2ncW4R6pGGjk5e0Resnj4AsdRt_BDxj0nc6ktZxy0JGwSG/exec", {
-        method: "POST",
-        body: JSON.stringify({
-            name: localStorage.getItem("username") || "Unknown",
-            loginTime: startTime.toLocaleString(),
-            logoutTime: new Date().toLocaleString(),
-            totalTime: formatTime(totalSeconds),
-            totalSeconds: totalSeconds
-        }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
-    .then(res => res.json())
-    .then(data => console.log("Success:", data))
-    .catch(err => console.error("Error:", err));
+  const username = localStorage.getItem("username");
+  const elapsedMs = Date.now() - startTime;
+  const elapsedSec = Math.floor(elapsedMs / 1000);
+
+  const hours = String(Math.floor(elapsedSec / 3600)).padStart(2, "0");
+  const minutes = String(Math.floor((elapsedSec % 3600) / 60)).padStart(2, "0");
+  const seconds = String(elapsedSec % 60).padStart(2, "0");
+
+  const data = {
+    name: username,
+    loginTime: new Date(startTime).toLocaleString(),
+    logoutTime: new Date().toLocaleString(),
+    totalTime: `${hours}:${minutes}:${seconds}`,
+    totalSeconds: elapsedSec
+  };
+
+  // Send data to Google Sheets
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data)
+  }).finally(() => {
+    localStorage.removeItem("username");
+    window.location.href = "login.html";
+  });
 }
