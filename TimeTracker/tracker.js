@@ -1,5 +1,5 @@
 // ===== CONFIG =====
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxEDTpaP66-iczAa9GhVRMX-8mrDfc9znAyHaUB26zuPXGWJY-orpN3V7ata2GqH9KA/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwAWrZUPz0_EhpOoyCqLB2ncW4R6pGGjk5e0Resnj4AsdRt_BDxj0nc6ktZxy0JGwSG/exec";
 
 // ===== ELEMENTS =====
 const displayName = document.getElementById("displayName");
