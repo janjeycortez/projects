@@ -1,5 +1,5 @@
 // ==== CONFIG ====
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyGsb10UON1FAnxkKvUMPTupscgZdtotYRobOJhqfUPYXtWkMBRoW0t6D8J4WMATLmE/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyZOavr1SfcQ4oceY1w49ud5eeJNVKMIvveBdMUVTpFPOtKRql0WR5ll9HKjwcN1XCV/exec";
 
 let startTime;
 let timerInterval;
