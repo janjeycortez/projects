@@ -95,6 +95,7 @@ document.getElementById("logoutBtn").addEventListener("click", () => {
   let totalSalary = totalHours * hourlyRate;
 
   let data = {
+    date: new Date().toLocaleDateString("en-PH"), // Added date field
     name: username,
     loginTime: formatTime(startTime),
     logoutTime: formatTime(endTime),
